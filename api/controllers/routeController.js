@@ -4,13 +4,16 @@ var logger = require('../../log/logger'),
 
 exports.getRoute = function(req, res){
 	accessLog.info('/route: ' + req.body + ' params: ' + req.params);
+console.log("getRoute");
 	if(!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0) || req.body.sensors.length < 3){
-		errorLog.warn("Bad request: " + req.body);
+		errorLog.warn("Bad request: " + JSON.stringify(req.body));
 		res.status(400).send('Request must include data from at least 3 sensors');
-	} else if(!req.body.stairs || req.body.stairs != "true" || req.body.stairs != "false"){
-		errorLog.warn("Bad request: " + req.body);
-		res.status(400).send('Request must contain a "stairs" value that is either "true" or "false"');
 	} else {
+		if(req.body.stairs){ 
+			if(req.body.stairs != "true" || req.body.stairs != "false"){
+				
+			}
+		}
 		var waypoints = [
 			["10", "0", "0"],
 			["0", "10", "0"],
