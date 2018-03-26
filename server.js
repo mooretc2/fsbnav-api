@@ -13,3 +13,5 @@ app.use(bodyParser.json());
 app.listen(port);
 
 console.log('todo list RESTful API server started on: ' + port);
+
+module.exports = app;

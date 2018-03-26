@@ -4,7 +4,8 @@
   "description": "API for fsbnav",
   "main": "server.js",
   "scripts": {
-    "test": "node server.js",
+    "test": "NODE_ENV=test mocha --timeout 10000",
+    "test-start": "node server.js",
     "start": "forever start --minUptime 1000 --spinSleepTime 1000 server.js",
     "stop": "forever stop server.js"
   },
