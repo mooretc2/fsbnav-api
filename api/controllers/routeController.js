@@ -26,7 +26,10 @@ exports.getRoute = function(req, res){
 exports.getRooms = function(req, res){
 	accessLog.info('/rooms:  params: ' + req.params);
 	var rooms = [
-		"1000", "1001", "1002", "1003"
+		{roomNum: "1000", popular: "true"},
+		{roomNum: "1001", popular: "false"},
+		{roomNum: "1002", popular: "false"},
+		{roomNum: "1003", popular: "true"}
 	];
 	res.json(rooms);
 };
