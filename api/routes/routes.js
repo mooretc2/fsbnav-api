@@ -4,5 +4,8 @@ module.exports = function(app) {
 
   app.route('/route')
     .post(routeController.getRoute);
+
+  app.route('/rooms')
+    .get(routeController.getRooms);
 };
 

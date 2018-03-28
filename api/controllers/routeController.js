@@ -4,7 +4,6 @@ var logger = require('../../log/logger'),
 
 exports.getRoute = function(req, res){
 	accessLog.info('/route: ' + req.body + ' params: ' + req.params);
-console.log("getRoute");
 	if(!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0) || req.body.sensors.length < 3){
 		errorLog.warn("Bad request: " + JSON.stringify(req.body));
 		res.status(400).send('Request must include data from at least 3 sensors');
@@ -22,4 +21,12 @@ console.log("getRoute");
 		];
 	}
 	res.json(waypoints);
+};
+
+exports.getRooms = function(req, res){
+	accessLog.info('/rooms:  params: ' + req.params);
+	var rooms = [
+		"1000", "1001", "1002", "1003"
+	];
+	res.json(rooms);
 };
