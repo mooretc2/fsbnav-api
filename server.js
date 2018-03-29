@@ -6,9 +6,8 @@ var express = require('express'),
   win = require('winston'),
   port = process.env.PORT || 3000;
 
-require('./api/routes/routes')(app);
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+require('./api/routes/routes')(app);
 
 app.listen(port);
 

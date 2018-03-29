@@ -7,7 +7,7 @@ function router(begin, end, stairs){
 }
 
 exports.getRoute = function(req, res){
-	accessLog.info('/route: ' + req.body + ' params: ' + req.params);
+	accessLog.info('/route: ' + JSON.stringify(req.body) + ' params: ' + req.params);
 	if(!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0) || req.body.sensors.length < 3){
 		errorLog.warn("Bad request: " + JSON.stringify(req.body));
 		res.status(400).send('Request must include data from at least 3 sensors');
