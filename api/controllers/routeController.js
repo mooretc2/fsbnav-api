@@ -7,17 +7,17 @@ function router(begin, end, stairs){
 }
 
 exports.getRoute = function(req, res){
-	accessLog.info('/route: ' + req.body + ' params: ' + req.params);
+	accessLog.info('/route: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
 	if(!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0) || req.body.sensors.length < 3){
 		errorLog.warn("Bad request: " + JSON.stringify(req.body));
-		res.status(400).send('Request must include data from at least 3 sensors');
+		res.status(400).send({msg: "Request must include data from at least 3 sensors"});
 	} else if(req.body.method && req.body.method == "room to room") {
 		//path = router(begin, end, stairs);
 		var waypoints = [
-			["0", "0", "10"],
-			["0", "10", "0"],
-			["10", "0", "0"],
-			["0", "0", "0"]
+			{x: "0", y: "10"},
+			{x: "10", y: "10"},
+			{x: "10", y: "0"},
+			{x: "0", y: "0"}
 		];
 	} else {
 		if(req.body.stairs){ 
@@ -26,10 +26,10 @@ exports.getRoute = function(req, res){
 			}
 		}
 		var waypoints = [
-			["10", "0", "0"],
-			["0", "10", "0"],
-			["0", "0", "10"],
-			["0", "0", "0"]
+			{x: "0", y: "10"},
+			{x: "10", y: "10"},
+			{x: "10", y: "0"},
+			{x: "0", y: "0"}
 		];
 	}
 	res.json(waypoints);
