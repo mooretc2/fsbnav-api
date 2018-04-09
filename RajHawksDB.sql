@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`cell` (
   PRIMARY KEY (`cellsID`))
 ENGINE = InnoDB;
 
-INSERT INTO room (cellsID, floorID, longitude, latitude) VALUES
+INSERT INTO cell (cellsID, floorID, longitude, latitude) VALUES
 			(0, 1, 0, 0),
 			(1, 1, 1, 0),
 			(2, 1, 2, 0),
