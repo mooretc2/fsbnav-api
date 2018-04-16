@@ -6035,6 +6035,18 @@ CREATE TABLE IF NOT EXISTS `mydb`.`node` (
   PRIMARY KEY (`nodeID`))
 ENGINE = InnoDB;
 
+Insert into node (nodeID, cellID) VALUES
+
+		(0, 1805),
+		(1, 1573),
+		(2, 1167),
+		(3, 993),
+		(4, 935),
+		(5, 761),
+		(6, 757),
+		(7, 765);
+
+
 
 -- -----------------------------------------------------
 -- Table `mydb`.`transition`
