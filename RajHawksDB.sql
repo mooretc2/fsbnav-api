@@ -6040,6 +6040,21 @@ Insert into node (nodeID, cellID) VALUES
 		(7, 765);
 
 
+DROP TABLE IF EXISTS `mydb`.`edge` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`edge` (
+  `edge ID` INT NOT NULL,
+  `node1ID` INT NOT NULL,
+  `node2ID` INT NOT NULL,
+  `elevationChange` TINYINT NULL,
+  PRIMARY KEY (`edgeID`))
+ENGINE = InnoDB;
+
+Insert into edge (edgeID, node1ID, node2ID, elevationChange) VALUES
+
+		(0, 0, 1);
+
+
 
 -- -----------------------------------------------------
 -- Table `mydb`.`transition`
