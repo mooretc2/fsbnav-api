@@ -32,11 +32,17 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `mydb`.`cell` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`cell` (
-  `cellsID` INT NOT NULL,
+  `cellID` INT NOT NULL,
   `floorID` INT NOT NULL,
   `longitude` INT NULL,
   `latitude` INT NULL,
-  PRIMARY KEY (`cellsID`))
+  PRIMARY KEY (`cellID`),
+  INDEX `floorID_idx` (`floorID` ASC),
+  CONSTRAINT `floorID`
+    FOREIGN KEY (`floorID`)
+    REFERENCES `mydb`.`floor` (`floorID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 INSERT INTO cell (cellsID, floorID, longitude, latitude) VALUES
@@ -5967,14 +5973,24 @@ DROP TABLE IF EXISTS `mydb`.`room` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`room` (
   `roomID` INT NOT NULL,
-  `nodeID` INT NULL,
-  `floorID` INT NULL,
-  `roomNumber` INT NOT NULL,
-  `roomName` VARCHAR(45) NOT NULL,
-  `isPopular` BOOL NOT NULL,
-  PRIMARY KEY (`roomID`))
+  `nodeID` INT NOT NULL DEFAULT foreign Key,
+  `floorID` INT NOT NULL DEFAULT 'foreign Key',
+  `roomNumber` INT NULL,
+  `isPopular` TINYINT NULL,
+  PRIMARY KEY (`roomID`),
+  INDEX `nodeID_idx` (`nodeID` ASC),
+  INDEX `floorID_idx` (`floorID` ASC),
+  CONSTRAINT `nodeID`
+    FOREIGN KEY (`nodeID`)
+    REFERENCES `mydb`.`node` (`nodeID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `floorID`
+    FOREIGN KEY (`floorID`)
+    REFERENCES `mydb`.`floor` (`floorID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Inserting values into room
@@ -6024,10 +6040,15 @@ DROP TABLE IF EXISTS `mydb`.`node` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`node` (
   `nodeID` INT NOT NULL,
-  `cellID` INT NULL,
-  PRIMARY KEY (`nodeID`))
+  `cellID` INT NOT NULL,
+  PRIMARY KEY (`nodeID`),
+  INDEX `cellID_idx` (`cellID` ASC),
+  CONSTRAINT `cellID`
+    FOREIGN KEY (`cellID`)
+    REFERENCES `mydb`.`cell` (`cellID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 Insert into node (nodeID, cellID) VALUES
 
 		(0, 1805),
@@ -6042,12 +6063,23 @@ Insert into node (nodeID, cellID) VALUES
 
 DROP TABLE IF EXISTS `mydb`.`edge` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`edge` (
-  `edge ID` INT NOT NULL,
-  `node1ID` INT NOT NULL,
-  `node2ID` INT NOT NULL,
-  `elevationChange` TINYINT NULL,
-  PRIMARY KEY (`edgeID`))
+CREATE TABLE IF NOT EXISTS `mydb`.`edges` (
+  `edgeID` INT NOT NULL,
+  `nodeID` INT NOT NULL,
+  `floorID` INT NOT NULL,
+  PRIMARY KEY (`edgeID`),
+  INDEX `nodeID_idx` (`nodeID` ASC),
+  INDEX `floorID_idx` (`floorID` ASC),
+  CONSTRAINT `nodeID`
+    FOREIGN KEY (`nodeID`)
+    REFERENCES `mydb`.`node` (`nodeID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `floorID`
+    FOREIGN KEY (`floorID`)
+    REFERENCES `mydb`.`floor` (`floorID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 Insert into edge (edgeID, node1ID, node2ID, elevationChange) VALUES
@@ -6076,8 +6108,14 @@ DROP TABLE IF EXISTS `mydb`.`beacon` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`beacon` (
   `beaconID` INT NOT NULL,
-  `cellID` INT NULL,
-  PRIMARY KEY (`beaconID`))
+  `cellID` INT NOT NULL,
+  PRIMARY KEY (`beaconID`),
+  INDEX `cellID_idx` (`cellID` ASC),
+  CONSTRAINT `cellID`
+    FOREIGN KEY (`cellID`)
+    REFERENCES `mydb`.`cell` (`cellID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 USE `mydb` ;
