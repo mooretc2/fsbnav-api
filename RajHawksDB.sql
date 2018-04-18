@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`cell` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-INSERT INTO cell (cellsID, floorID, longitude, latitude) VALUES
+INSERT INTO cell (cellID, floorID, longitude, latitude) VALUES
 			(0, 1, 0, 0),
 			(1, 1, 1, 0),
 			(2, 1, 2, 0),
@@ -5973,19 +5973,20 @@ DROP TABLE IF EXISTS `mydb`.`room` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`room` (
   `roomID` INT NOT NULL,
-  `nodeID` INT NOT NULL DEFAULT foreign Key,
-  `floorID` INT NOT NULL DEFAULT 'foreign Key',
+  `nodeID` INT NOT NULL,
+  `floorID` INT NOT NULL,
   `roomNumber` INT NULL,
   `isPopular` TINYINT NULL,
+  `roomName` VARCHAR(255),
   PRIMARY KEY (`roomID`),
   INDEX `nodeID_idx` (`nodeID` ASC),
   INDEX `floorID_idx` (`floorID` ASC),
-  CONSTRAINT `nodeID`
+  CONSTRAINT `roomnodeID`
     FOREIGN KEY (`nodeID`)
     REFERENCES `mydb`.`node` (`nodeID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `floorID`
+  CONSTRAINT `roomfloorID`
     FOREIGN KEY (`floorID`)
     REFERENCES `mydb`.`floor` (`floorID`)
     ON DELETE NO ACTION
@@ -6017,7 +6018,7 @@ INSERT INTO room (roomID, nodeID, floorID, roomNumber, roomName, isPopular) VALU
 		(18, null, null, 1038, 'Room 1038 - Global Studies', 1),
 		(19, null, null, 1039, 'Entrance Hall - West', 1),
 		(20, null, null, 1040, 'Entrance Hall - Central', 1),
-		(21, null, null, 1041, 'Entrance Hall - East', 1);
+		(21, null, null, 1041, 'Entrance Hall - East', 1),
 		(22, null, null, 2000, 'Taylor Auditorium - Second Floor', 1),
 		(23, null, null, 2006, 'Room 2006', 0),
 		(24, null, null, 2037, 'Room 2037', 0),
@@ -6030,8 +6031,8 @@ INSERT INTO room (roomID, nodeID, floorID, roomNumber, roomName, isPopular) VALU
 		(31, null, null, 2053, 'Department of Finance', 1),
 		(32, null, null, 2054, 'Department of Econonomics', 1),
 		(33, null, null, 2076, 'Restroom - GN', 0),
-		(34, null, null, 2078, 'Institutde for Entrepreneurship', 1)
-		(35, null, null, 2079, 'Second Floor Conference Room', 0)
+		(34, null, null, 2078, 'Institutde for Entrepreneurship', 1),
+		(35, null, null, 2079, 'Second Floor Conference Room', 0);
 
 -- -----------------------------------------------------
 -- Table `mydb`.`node`
@@ -6101,29 +6102,36 @@ Insert into node (nodeID, cellID) VALUES
 
 DROP TABLE IF EXISTS `mydb`.`edge` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`edges` (
+CREATE TABLE IF NOT EXISTS `mydb`.`edge` (
   `edgeID` INT NOT NULL,
-  `nodeID` INT NOT NULL,
+  `node1ID` INT NOT NULL,
+  `node2ID` INT NOT NULL,
   `floorID` INT NOT NULL,
   PRIMARY KEY (`edgeID`),
-  INDEX `nodeID_idx` (`nodeID` ASC),
+  INDEX `node1ID_idx` (`node1ID` ASC),
+  INDEX `node2ID_idx` (`node2ID` ASC),
   INDEX `floorID_idx` (`floorID` ASC),
-  CONSTRAINT `nodeID`
-    FOREIGN KEY (`nodeID`)
+  CONSTRAINT `edgenode1ID`
+    FOREIGN KEY (`node1ID`)
     REFERENCES `mydb`.`node` (`nodeID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `floorID`
+  CONSTRAINT `edgenode2ID`
+    FOREIGN KEY (`node2ID`)
+    REFERENCES `mydb`.`node` (`nodeID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `edgefloorID`
     FOREIGN KEY (`floorID`)
     REFERENCES `mydb`.`floor` (`floorID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-Insert into edge (edgeID, node1ID, node2ID, elevationChange) VALUES
+Insert into edge (edgeID, node1ID, node2ID, floorID) VALUES
 
 		(0, 0, 1),
-        (1, 1, 2),
+        	(1, 1, 2),
 		(2, 2, 3),
 		(3, 3, 4),
 		(4, 4, 5),
@@ -6163,7 +6171,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`beacon` (
   `cellID` INT NOT NULL,
   PRIMARY KEY (`beaconID`),
   INDEX `cellID_idx` (`cellID` ASC),
-  CONSTRAINT `cellID`
+  CONSTRAINT `beaconcellID`
     FOREIGN KEY (`cellID`)
     REFERENCES `mydb`.`cell` (`cellID`)
     ON DELETE NO ACTION
