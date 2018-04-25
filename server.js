@@ -1,9 +1,10 @@
 'use strict';
 var express = require('express'),
   app = express(),
-  bodyParser = require('body-parser'),  
+  bodyParser = require('body-parser'),
   fs = require('fs'),
   win = require('winston'),
+  db = require('./db'),
   port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());

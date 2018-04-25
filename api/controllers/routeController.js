@@ -1,6 +1,9 @@
 var logger = require('../../log/logger'),
     accessLog = logger.accessLog,
-    errorLog = logger.errorLog;
+    errorLog = logger.errorLog,
+    nodes = require('../models/nodes'),
+    edges = require('../models/edges'),
+    nodes = require('../models/edges');
 
 //current algorithm does not make use of searching through database nodes, getting edges, or checking for stair/elevator preferences
 //origin and destination must be ints (primary key of node)
