@@ -109,8 +109,8 @@ exports.getRooms = function(req, res){
 };
 
 exports.getRoomsByID = function(req, res){
-    accessLog.info('getRoomsById:  params: ' + req.params);
-	rooms.getAllStartingWith(req.params.roomID, function(err, data){
+    accessLog.info('getRoomsById:  params: ' + JSON.stringify(req.params));
+	rooms.getAllStartingWith(parseInt(req.params.roomID), function(err, data){
         if(err){
             res.status(500).send("error getting data from the database");
             errorLog.error(err);
