@@ -15,10 +15,21 @@ exports.getRoute = function(req, res){
 	} else if(req.body.method && req.body.method == "room to room") {
 		//path = router(begin, end, stairs);
 		var waypoints = [
-			{x: "0", y: "10"},
-			{x: "10", y: "10"},
-			{x: "10", y: "0"},
-			{x: "0", y: "0"}
+			{floor:1,x:5,y:26},
+			{floor:1,x:7,y:26},
+			{floor:1,x:7,y:13},
+			{floor:1,x:21,y:13},
+			{floor:1,x:21,y:15},
+			{floor:1,x:30,y:15},
+			{floor:1,x:30,y:13},
+			{floor:1,x:33,y:13},
+			{floor:1,x:33,y:14},
+			{floor:2,x:32,y:12},
+			{floor:2,x:33,y:12},
+			{floor:2,x:33,y:11},
+			{floor:2,x:30,y:11},
+			{floor:2,x:30,y:8},
+			{floor:2,x:25,y:8}
 		];
 	} else {
 		if(req.body.stairs){ 
@@ -27,10 +38,14 @@ exports.getRoute = function(req, res){
 			}
 		}
 		var waypoints = [
-			{x: "0", y: "10"},
-			{x: "10", y: "10"},
-			{x: "10", y: "0"},
-			{x: "0", y: "0"}
+			{floor:1,x:5,y:26},
+			{floor:1,x:7,y:26},
+			{floor:1,x:7,y:12},
+			{floor:2,x:6,y:10},
+			{floor:2,x:6,y:11},
+			{floor:2,x:21,y:11},
+			{floor:2,x:21,y:9},
+			{floor:2,x:25,y:9}
 		];
 	}
 	res.json(waypoints);
