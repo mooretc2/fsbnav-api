@@ -2,10 +2,10 @@
 module.exports = function(app) {
   var routeController = require('../controllers/routeController');
 
-  app.route('/route')
-    .post(routeController.getRoute);
+  app.post('/route', routeController.getRoute);
 
-  app.route('/rooms')
-    .get(routeController.getRooms);
+  app.get('/rooms', routeController.getRooms);
+  
+  app.get('/rooms/:roomID', routeController.getRoomsByID);
 };
 
