@@ -8,7 +8,7 @@ exports.getAll = function (done) {
 }
 
 exports.getAllStartingWith = function (roomID, done) {
-    db.get().query("SELECT roomName FROM room WHERE roomID LIKE '?%'", roomID, function (err, rows) {
+    db.get().query("SELECT roomName FROM room WHERE roomNumber LIKE ?", roomID+'%', function (err, rows) {
         if (err) return done(err);
         done(null, rows);
     });
