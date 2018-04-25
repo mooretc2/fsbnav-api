@@ -37,25 +37,52 @@ function router(origin, destination, preference){
     destParent[destination] = -1;
 
     while (originQueue.length != 0 && destQueue.length != 0) {
-        //BFS for both
-        BFS(originQueue, originVisited, originParent);
-        BFS(destQueue, destVisited, destParent);
 
-        //check for intersection
+        //BFS for forward
+        current = originQueue.shift();
+        //need to get list of adjacent nodes from db
+        //need to handle stair/elevator preference
+        for()   {
+            if(!originVisited[i])   {
+                originParent[i] = current;
+                originVisited[i] = true;
+                originQueue.push(i);
+            }
+        }
+
+        //BFS for backward
+        current = destQueue.shift();
+        //need list of adj nodes from db
+        //need to handle stair/elevator preference... possibly in the getEdge call
+        for()   {
+            if(!destVisited[i]) {
+                destParent[i] = current;
+                destVisited[i] = true;
+                destQueue.push(i);
+        }
+        }
+
+            //check for intersection
         intersectNode = isIntersecting(numOfNodes, originVisited, destVisited);
 
-        //if intersecting vertex is found, there is a path
+            //if intersecting vertex is found, there is a path
         if (intersectNode != -1) {
+            var path = [];
+            path.push(intersectNode);
+            i = intersectNode;
+            while(i != origin) {
+                path.unshift(originParent[i]);
+                i = originParent[i];
+            }
+            i = intersectNode;
+            while(i != destination) {
+                path.push(destinationParent[i]);
+                i = destinationParent[i];
+            }
             //return path. still needs to be done
         }
     }
     //Failure. not sure what to put here if failure occurs
-}
-
-//Breadth First Search function. used by router
-function BFS(queue, visited, parent) {
-    //BFS code... can't seem to get array or queue functions
-    
 }
 
 //check for intersection between BFS. used by router
@@ -76,10 +103,21 @@ exports.getRoute = function(req, res){
 	} else if(req.body.method && req.body.method == "room to room") {
 		//path = router(begin, end, stairs);
 		var waypoints = [
-			{x: "0", y: "10"},
-			{x: "10", y: "10"},
-			{x: "10", y: "0"},
-			{x: "0", y: "0"}
+			{floor:1,x:5,y:26},
+			{floor:1,x:7,y:26},
+			{floor:1,x:7,y:13},
+			{floor:1,x:21,y:13},
+			{floor:1,x:21,y:15},
+			{floor:1,x:30,y:15},
+			{floor:1,x:30,y:13},
+			{floor:1,x:33,y:13},
+			{floor:1,x:33,y:14},
+			{floor:2,x:32,y:12},
+			{floor:2,x:33,y:12},
+			{floor:2,x:33,y:11},
+			{floor:2,x:30,y:11},
+			{floor:2,x:30,y:8},
+			{floor:2,x:25,y:8}
 		];
 	} else {
 		if(req.body.stairs){ 
@@ -88,10 +126,14 @@ exports.getRoute = function(req, res){
 			}
 		}
 		var waypoints = [
-			{x: "0", y: "10"},
-			{x: "10", y: "10"},
-			{x: "10", y: "0"},
-			{x: "0", y: "0"}
+			{floor:1,x:5,y:26},
+			{floor:1,x:7,y:26},
+			{floor:1,x:7,y:12},
+			{floor:2,x:6,y:10},
+			{floor:2,x:6,y:11},
+			{floor:2,x:21,y:11},
+			{floor:2,x:21,y:9},
+			{floor:2,x:25,y:9}
 		];
 	}
 	res.json(waypoints);
