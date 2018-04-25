@@ -8,7 +8,12 @@ var state = {
 };
 
 exports.connect = function(mode, done) {
-  state.pool = mysql.createPool(config);
+  state.pool = mysql.createPool({
+    host: config.config.host,
+    user: config.config.user,
+    password: config.config.password,
+    database: config.config.database
+  });
 
   state.mode = mode;
   done();

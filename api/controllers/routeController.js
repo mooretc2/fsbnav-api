@@ -100,6 +100,8 @@ exports.getRoute = function(req, res){
 exports.getRooms = function(req, res){
 	accessLog.info('/rooms:  params: ' + req.params);
 	rooms.getAll(function(err, data){
+		console.log(err);
+		console.log(JSON.stringify(data));
 		res.json(data);
 	});
 	//res.json(rooms);
