@@ -1,7 +1,7 @@
 var db = require('../../db.js');
 
 exports.getAll = function (done) {
-    db.get().query('SELECT roomName FROM room', function (err, rows) {
+    db.get().query('SELECT roomName, isPopular FROM room', function (err, rows) {
         if (err) return done(err);
         done(null, rows);
     });
