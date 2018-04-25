@@ -95,7 +95,7 @@ function isIntersecting(numOfNodes, originVisited, destVisited) {
 }
 
 exports.getRoute = function(req, res){
-	accessLog.info('/route: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
+	accessLog.info('getRoute: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
 
 	if(!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0) || req.body.sensors.length < 3){
 		errorLog.warn("Bad request: " + JSON.stringify(req.body));
@@ -103,10 +103,21 @@ exports.getRoute = function(req, res){
 	} else if(req.body.method && req.body.method == "room to room") {
 		//path = router(begin, end, stairs);
 		var waypoints = [
-			{x: "0", y: "10"},
-			{x: "10", y: "10"},
-			{x: "10", y: "0"},
-			{x: "0", y: "0"}
+			{floor:1,x:5,y:26},
+			{floor:1,x:7,y:26},
+			{floor:1,x:7,y:13},
+			{floor:1,x:21,y:13},
+			{floor:1,x:21,y:15},
+			{floor:1,x:30,y:15},
+			{floor:1,x:30,y:13},
+			{floor:1,x:33,y:13},
+			{floor:1,x:33,y:14},
+			{floor:2,x:32,y:12},
+			{floor:2,x:33,y:12},
+			{floor:2,x:33,y:11},
+			{floor:2,x:30,y:11},
+			{floor:2,x:30,y:8},
+			{floor:2,x:25,y:8}
 		];
 	} else {
 		if(req.body.stairs){ 
@@ -115,21 +126,37 @@ exports.getRoute = function(req, res){
 			}
 		}
 		var waypoints = [
-			{x: "0", y: "10"},
-			{x: "10", y: "10"},
-			{x: "10", y: "0"},
-			{x: "0", y: "0"}
+			{floor:1,x:5,y:26},
+			{floor:1,x:7,y:26},
+			{floor:1,x:7,y:12},
+			{floor:2,x:6,y:10},
+			{floor:2,x:6,y:11},
+			{floor:2,x:21,y:11},
+			{floor:2,x:21,y:9},
+			{floor:2,x:25,y:9}
 		];
 	}
 	res.json(waypoints);
 };
 
 exports.getRooms = function(req, res){
-	accessLog.info('/rooms:  params: ' + req.params);
+	accessLog.info('getRooms:  params: ' + req.params);
 	rooms.getAll(function(err, data){
-		console.log(err);
-		console.log(JSON.stringify(data));
+        if(err){
+            res.status(500).send("error getting data from the database");
+            errorLog.error(err);
+        }
 		res.json(data);
 	});
-	//res.json(rooms);
 };
+
+exports.getRoomsByID = function(req, res){
+    accessLog.info('getRoomsById:  params: ' + req.params);
+	rooms.getAllStartingWith(req.params.roomID, function(err, data){
+        if(err){
+            res.status(500).send("error getting data from the database");
+            errorLog.error(err);
+        }
+		res.json(data);
+	});
+}
