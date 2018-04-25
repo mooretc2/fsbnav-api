@@ -8,7 +8,7 @@ exports.getAll = function (done) {
 }
 
 exports.getNumEdges = function (done) {
-    db.get().query('SELECT COUNT(edgeID) FROM edge', userId, function (err, rows) {
+    db.get().query('SELECT COUNT(edgeID) FROM edge', function (err, rows) {
         if (err) return done(err);
         done(null, rows);
     });
