@@ -3,7 +3,7 @@ var logger = require('../../log/logger'),
     errorLog = logger.errorLog,
     nodes = require('../models/nodes'),
     edges = require('../models/edges'),
-    nodes = require('../models/edges');
+    rooms = require('../models/rooms');
 
 //current algorithm does not make use of searching through database nodes, getting edges, or checking for stair/elevator preferences
 //origin and destination must be ints (primary key of node)
@@ -99,11 +99,8 @@ exports.getRoute = function(req, res){
 
 exports.getRooms = function(req, res){
 	accessLog.info('/rooms:  params: ' + req.params);
-	var rooms = [
-		{roomNum: "1000", popular: "true"},
-		{roomNum: "1001", popular: "false"},
-		{roomNum: "1002", popular: "false"},
-		{roomNum: "1003", popular: "true"}
-	];
-	res.json(rooms);
+	rooms.getAll(function(err, data){
+		res.json(data);
+	});
+	//res.json(rooms);
 };
