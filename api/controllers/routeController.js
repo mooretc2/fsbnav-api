@@ -34,25 +34,52 @@ function router(origin, destination, preference){
     destParent[destination] = -1;
 
     while (originQueue.length != 0 && destQueue.length != 0) {
-        //BFS for both
-        BFS(originQueue, originVisited, originParent);
-        BFS(destQueue, destVisited, destParent);
 
-        //check for intersection
+        //BFS for forward
+        current = originQueue.shift();
+        //need to get list of adjacent nodes from db
+        //need to handle stair/elevator preference
+        for()   {
+            if(!originVisited[i])   {
+                originParent[i] = current;
+                originVisited[i] = true;
+                originQueue.push(i);
+            }
+        }
+
+        //BFS for backward
+        current = destQueue.shift();
+        //need list of adj nodes from db
+        //need to handle stair/elevator preference... possibly in the getEdge call
+        for()   {
+            if(!destVisited[i]) {
+                destParent[i] = current;
+                destVisited[i] = true;
+                destQueue.push(i);
+        }
+        }
+
+            //check for intersection
         intersectNode = isIntersecting(numOfNodes, originVisited, destVisited);
 
-        //if intersecting vertex is found, there is a path
+            //if intersecting vertex is found, there is a path
         if (intersectNode != -1) {
+            var path = [];
+            path.push(intersectNode);
+            i = intersectNode;
+            while(i != origin) {
+                path.unshift(originParent[i]);
+                i = originParent[i];
+            }
+            i = intersectNode;
+            while(i != destination) {
+                path.push(destinationParent[i]);
+                i = destinationParent[i];
+            }
             //return path. still needs to be done
         }
     }
     //Failure. not sure what to put here if failure occurs
-}
-
-//Breadth First Search function. used by router
-function BFS(queue, visited, parent) {
-    //BFS code... can't seem to get array or queue functions
-    
 }
 
 //check for intersection between BFS. used by router
