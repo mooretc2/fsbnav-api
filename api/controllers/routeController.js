@@ -68,7 +68,7 @@ function isIntersecting(numOfNodes, originVisited, destVisited) {
 }
 
 exports.getRoute = function(req, res){
-	accessLog.info('/route: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
+	accessLog.info('getRoute: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
 
 	if(!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0) || req.body.sensors.length < 3){
 		errorLog.warn("Bad request: " + JSON.stringify(req.body));
@@ -98,11 +98,23 @@ exports.getRoute = function(req, res){
 };
 
 exports.getRooms = function(req, res){
-	accessLog.info('/rooms:  params: ' + req.params);
+	accessLog.info('getRooms:  params: ' + req.params);
 	rooms.getAll(function(err, data){
-		console.log(err);
-		console.log(JSON.stringify(data));
+        if(err){
+            res.status(500).send("error getting data from the database");
+            errorLog.error(err);
+        }
 		res.json(data);
 	});
-	//res.json(rooms);
 };
+
+exports.getRoomsByID = function(req, res){
+    accessLog.info('getRoomsById:  params: ' + req.params);
+	rooms.getAllStartingWith(req.params.roomID, function(err, data){
+        if(err){
+            res.status(500).send("error getting data from the database");
+            errorLog.error(err);
+        }
+		res.json(data);
+	});
+}

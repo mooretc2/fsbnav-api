@@ -8,6 +8,7 @@ var express = require('express'),
   port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 require('./api/routes/routes')(app);
 
 db.connect(db.MODE_PRODUCTION, function (err) {
