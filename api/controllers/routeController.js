@@ -98,10 +98,10 @@ function isIntersecting(numOfNodes, originVisited, destVisited) {
 exports.getRoute = function(req, res){
 	accessLog.info('getRoute: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
 
-	if(!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0) || req.body.sensors.length < 3){
-		errorLog.warn("Bad request: " + JSON.stringify(req.body));
-		res.status(400).send({msg: "Request must include data from at least 3 sensors"});
-	} else if(req.body.method && req.body.method == "room to room") {
+    if(!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0)){
+        errorLog.warn("getRoute Bad Request: " + JSON.stringify(req.body));
+        res.status(400).send("Request must not be empty");
+    } else if(req.body.method && req.body.method === "room to room") {
 		//path = router(begin, end, stairs);
 		var waypoints = [
 			{floor:1,x:5,y:26},
@@ -120,6 +120,9 @@ exports.getRoute = function(req, res){
 			{floor:2,x:30,y:8},
 			{floor:2,x:25,y:8}
 		];
+	} else if(req.body.sensors.length < 3){
+		errorLog.warn("getRoute Bad request: " + JSON.stringify(req.body));
+		res.status(400).send("Request must include data from at least 3 sensors");
 	} else {
 		if(req.body.stairs){ 
 			if(req.body.stairs != "true" || req.body.stairs != "false"){
@@ -145,7 +148,7 @@ exports.getRooms = function(req, res){
 	rooms.getAll(function(err, data){
         if(err){
             res.status(500).send("error getting data from the database");
-            errorLog.error(err);
+            errorLog.error("getRooms: " + err);
         }
 		res.json(data);
 	});
@@ -156,7 +159,7 @@ exports.getRoomsByID = function(req, res){
 	rooms.getAllStartingWith(parseInt(req.params.roomID), function(err, data){
         if(err){
             res.status(500).send("error getting data from the database");
-            errorLog.error(err);
+            errorLog.error("getRoomsById : " + err);
         }
 		res.json(data);
 	});
