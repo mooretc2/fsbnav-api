@@ -3,7 +3,8 @@ var logger = require('../../log/logger'),
     errorLog = logger.errorLog,
     nodes = require('../models/nodes'),
     edges = require('../models/edges'),
-    rooms = require('../models/rooms');
+    rooms = require('../models/rooms'),
+    cells = require('../models/cells');
 /*
 //current algorithm does not make use of searching through database nodes, getting edges, or checking for stair/elevator preferences
 //origin and destination must be ints (primary key of node)
