@@ -4,7 +4,7 @@ var logger = require('../../log/logger'),
     nodes = require('../models/nodes'),
     edges = require('../models/edges'),
     rooms = require('../models/rooms');
-
+/*
 //current algorithm does not make use of searching through database nodes, getting edges, or checking for stair/elevator preferences
 //origin and destination must be ints (primary key of node)
 //preference must be a tinyint (0 or 1)
@@ -93,7 +93,7 @@ function isIntersecting(numOfNodes, originVisited, destVisited) {
     }
     return -1;
 }
-
+*/
 exports.getRoute = function(req, res){
 	accessLog.info('getRoute: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
 
@@ -151,8 +151,8 @@ exports.getRooms = function(req, res){
 };
 
 exports.getRoomsByID = function(req, res){
-    accessLog.info('getRoomsById:  params: ' + req.params);
-	rooms.getAllStartingWith(req.params.roomID, function(err, data){
+    accessLog.info('getRoomsById:  params: ' + JSON.stringify(req.params));
+	rooms.getAllStartingWith(parseInt(req.params.roomID), function(err, data){
         if(err){
             res.status(500).send("error getting data from the database");
             errorLog.error(err);
