@@ -6144,7 +6144,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`edge` (
   PRIMARY KEY (`edgeID`),
   INDEX `node1ID_idx` (`node1ID` ASC),
   INDEX `node2ID_idx` (`node2ID` ASC),
-  INDEX `floorID_idx` (`floorID` ASC),
+  INDEX `floorID_idx` (`transition` ASC),
   CONSTRAINT `edgenode1ID`
     FOREIGN KEY (`node1ID`)
     REFERENCES `mydb`.`node` (`nodeID`)
