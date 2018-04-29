@@ -13,3 +13,10 @@ exports.getAllStartingWith = function (roomID, done) {
         done(null, rows);
     });
 }
+
+exports.getNodeIDByRoomID = function (roomID, done) {
+    db.get().query("SELECT nodeID FROM room WHERE roomID = ?", roomID, function (err, rows) {
+        if (err) return done(err);
+        done(null, rows);
+    });
+}
