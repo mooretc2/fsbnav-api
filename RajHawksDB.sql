@@ -25,6 +25,9 @@ CREATE TABLE IF NOT EXISTS `mydb`.`floor` (
   PRIMARY KEY (`floorID`))
 ENGINE = InnoDB;
 
+INSERT INTO floor (floorID) VALUES
+			(1),
+            (2);
 
 -- -----------------------------------------------------
 -- Table `mydb`.`cell`
@@ -6113,7 +6116,22 @@ Insert into node (nodeID, cellID) VALUES
 		(59, 4918),
 		(60, 5150),
 		(61, 5730),
-		(62, 4920);
+		(62, 4920),
+        (63, 1799),
+        (64, 703),
+        (65, 831),
+        (66, 949),
+        (67, 958),
+        (68, 845),
+        (69, 740),
+        (70, 2596),
+        (71, 4700),
+        (72, 3544),
+        (73, 3672),
+        (74, 3795),
+        (75, 3686),
+        (76, 3582),
+        (77, 5730);
 
 
 DROP TABLE IF EXISTS `mydb`.`edge` ;
@@ -6122,11 +6140,11 @@ CREATE TABLE IF NOT EXISTS `mydb`.`edge` (
   `edgeID` INT NOT NULL,
   `node1ID` INT NOT NULL,
   `node2ID` INT NOT NULL,
-  `floorID` INT NOT NULL,
+  `transition` TINYINT NULL,
   PRIMARY KEY (`edgeID`),
   INDEX `node1ID_idx` (`node1ID` ASC),
   INDEX `node2ID_idx` (`node2ID` ASC),
-  INDEX `floorID_idx` (`floorID` ASC),
+  INDEX `floorID_idx` (`transition` ASC),
   CONSTRAINT `edgenode1ID`
     FOREIGN KEY (`node1ID`)
     REFERENCES `mydb`.`node` (`nodeID`)
@@ -6136,96 +6154,99 @@ CREATE TABLE IF NOT EXISTS `mydb`.`edge` (
     FOREIGN KEY (`node2ID`)
     REFERENCES `mydb`.`node` (`nodeID`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `edgefloorID`
-    FOREIGN KEY (`floorID`)
-    REFERENCES `mydb`.`floor` (`floorID`)
-    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-Insert into edge (edgeID, node1ID, node2ID, floorID) VALUES
+Insert into edge (edgeID, node1ID, node2ID, transition) VALUES
 
-		(0, 0, 1, 1),
-		(1, 1, 2, 1),
-		(2, 2, 3, 1),
-		(3, 3, 4, 1),
-		(4, 4, 5, 1),
-		(5, 5, 6, 1),
-		(6, 1, 7, 1),
-		(7, 7, 8, 1),
-		(8, 8, 9, 1),
-		(9, 9, 10, 1),
-		(10, 10, 11, 1),
-		(11, 11, 18, 1),
-		(12, 18, 22, 1),
-		(13, 18, 17, 1),
-		(14, 17, 14, 1),
-        (15, 14, 13, 1),
-        (16, 8, 13, 1),
-        (17, 13, 12, 1),
-        (18, 12, 16, 1),
-        (19, 16, 15, 1),
-        (20, 16, 19, 1),
-        (21, 19, 20, 1),
-        (22, 20, 21, 1),
-        (23, 17, 21, 1),
-        (24, 20, 23, 1),
-        (25, 23, 24, 1),
-        (26, 24, 25, 1),
-        (27, 25, 34, 1),
-        (28, 34, 33, 1),
-        (29, 33, 32, 1),
-        (30, 25, 26, 1),
-        (31, 26, 27, 1),
-        (32, 27, 35, 1),
-        (33, 27, 28, 1),
-        (34, 28, 29, 1),
-        (35, 29, 31, 1),
-        (36, 29, 30, 1),
-        (37, 36, 37, 2),
-        (38, 37, 38, 2),
-        (39, 38, 39, 2),
-        (40, 38, 41, 2),
-        (41, 41, 42, 2),
-        (42, 42, 43, 2),
-        (43, 43, 44, 2),
-        (44, 44, 45, 2),
-        (45, 44, 47, 2),
-        (46, 47, 46, 2),
-        (47, 47, 48, 2),
-        (48, 48, 49, 2),
-        (49, 49, 52, 2),
-        (50, 52, 51, 2),
-        (51, 46, 50, 2),
-        (52, 50, 51, 2),
-        (53, 51, 53, 2),
-        (54, 53, 54, 2),
-        (55, 54, 55, 2),
-        (56, 55, 56, 2),
-        (57, 56, 57, 2),
-        (58, 57, 58, 2),
-        (59, 58, 59, 2),
-        (60, 59, 62, 2),
-        (61, 59, 60, 2),
-        (62, 60, 61, 2);
+		(0, 0, 1, NULL),
+		(1, 1, 2, NULL),
+		(2, 2, 3, NULL),
+		(3, 3, 4, NULL),
+		(4, 4, 5, NULL),
+		(5, 5, 6, NULL),
+		(6, 1, 7, NULL),
+		(7, 7, 8, NULL),
+		(8, 8, 9, NULL),
+		(9, 9, 10, NULL),
+		(10, 10, 11, NULL),
+		(11, 11, 18, NULL),
+		(12, 18, 22, NULL),
+		(13, 18, 17, NULL),
+		(14, 17, 14, NULL),
+        (15, 14, 13, NULL),
+        (16, 8, 13, NULL),
+        (17, 13, 12, NULL),
+        (18, 12, 16, NULL),
+        (19, 16, 15, NULL),
+        (20, 16, 19, NULL),
+        (21, 19, 20, NULL),
+        (22, 20, 21, NULL),
+        (23, 17, 21, NULL),
+        (24, 20, 23, NULL),
+        (25, 23, 24, NULL),
+        (26, 24, 25, NULL),
+        (27, 25, 34, NULL),
+        (28, 34, 33, NULL),
+        (29, 33, 32, NULL),
+        (30, 25, 26, NULL),
+        (31, 26, 27, NULL),
+        (32, 27, 35, NULL),
+        (33, 27, 28, NULL),
+        (34, 28, 29, NULL),
+        (35, 29, 31, NULL),
+        (36, 29, 30, NULL),
+        (37, 36, 37, NULL),
+        (38, 37, 38, NULL),
+        (39, 38, 39, NULL),
+        (40, 38, 41, NULL),
+        (41, 41, 42, NULL),
+        (42, 42, 43, NULL),
+        (43, 43, 44, NULL),
+        (44, 44, 45, NULL),
+        (45, 44, 47, NULL),
+        (46, 47, 46, NULL),
+        (47, 47, 48, NULL),
+        (48, 48, 49, NULL),
+        (49, 49, 52, NULL),
+        (50, 52, 51, NULL),
+        (51, 46, 50, NULL),
+        (52, 50, 51, NULL),
+        (53, 51, 53, NULL),
+        (54, 53, 54, NULL),
+        (55, 53, 55, NULL),
+        (56, 55, 56, NULL),
+        (57, 56, 57, NULL),
+        (58, 57, 58, NULL),
+        (59, 58, 59, NULL),
+        (60, 59, 62, NULL),
+        (61, 59, 60, NULL),
+        (62, 60, 61, NULL),
+        (63, 39, 40, NULL),
+        (64, 6, 63, NULL),
+        (65, 1, 64, NULL),
+        (66, 9, 65, NULL),
+        (67, 14, 66, NULL),
+        (68, 21, 67, NULL),
+        (69, 23, 68, NULL),
+        (70, 25, 69, NULL),
+        (71, 30, 70, NULL),
+        (72, 39, 71, NULL),
+        (73, 41, 72, NULL),
+        (74, 44, 73, NULL),
+        (75, 49, 74, NULL),
+        (76, 53, 75, NULL),
+        (77, 57, 76, NULL),
+        (78, 61, 77, NULL),
+        (79, 63, 71, 1),
+        (80, 64, 72, 1),
+        (81, 65, 73, 0),
+        (82, 66, 74, 1),
+        (83, 67, 74, 1),
+        (84, 68, 75, 0),
+        (85, 69, 76, 1),
+        (86, 70, 77, 1);
         
-		
-
-
--- -----------------------------------------------------
--- Table `mydb`.`transition`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`transition` ;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`transition` (
-  `transitionID` INT NOT NULL,
-  `nodeID` INT NOT NULL,
-  `floorID` INT NOT NULL,
-  PRIMARY KEY (`transitionID`))
-ENGINE = InnoDB;
-
-
 -- -----------------------------------------------------
 -- Table `mydb`.`beacon`
 -- -----------------------------------------------------
