@@ -10,6 +10,6 @@ exports.getAllNodeIDs = function (done) {
 exports.getNumNodes = function (done) {
     db.get().query('SELECT COUNT(nodeID) FROM node', function (err, rows) {
         if (err) return done(err);
-        done(null, rows);
+        done(null, rows[0]["COUNT(nodeID)"]);
     });
 }
