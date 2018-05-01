@@ -144,7 +144,7 @@ exports.getRoute = function(req, res){
 };
 
 exports.getRooms = function(req, res){
-	accessLog.info('getRooms:  params: ' + req.params);
+	accessLog.info('getRooms:  params: ' + JSON.stringify(req.params));
 	rooms.getAll(function(err, data){
         if(err){
             res.status(500).send("error getting data from the database");
