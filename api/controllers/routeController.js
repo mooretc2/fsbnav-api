@@ -185,15 +185,16 @@ exports.getRooms = async function(req, res){
 };
 
 
-exports.getRoomsByID = function(req, res){
+exports.getRoomsByID = async function(req, res){
     accessLog.info('getRoomsById:  params: ' + JSON.stringify(req.params));
-	rooms.getAllStartingWith(parseInt(req.params.roomID), function(err, data){
-        if(err){
-            res.status(500).send("error getting data from the database");
-            errorLog.error("getRoomsById : " + err);
-        }
-		res.json(data);
-	});
+    var data;
+    try{
+        data = await rooms.getAllStartingWith(parseInt(req.params.roomID));
+    } catch(err){
+        res.status(500).send("error getting data from the database");
+        errorLog.error("getRoomsById : " + err);
+    }
+	res.json(data);
 };
 
 exports.testFunction = async function(req, res){
