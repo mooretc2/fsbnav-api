@@ -172,16 +172,18 @@ exports.getRoute = function(req, res){
 	res.json(waypoints);
 };
 
-exports.getRooms = function(req, res){
+exports.getRooms = async function(req, res){
 	accessLog.info('getRooms:  params: ' + JSON.stringify(req.params));
-	rooms.getAll(function(err, data){
-        if(err){
-            res.status(500).send("error getting data from the database");
-            errorLog.error("getRooms: " + err);
-        }
-		res.json(data);
-	});
+    var data;
+    try{
+        data = await rooms.getAll();
+    } catch (err) {
+        res.status(500).send("error getting data from the database");
+        errorLog.error("getRooms: " + err);
+    }
+	res.json(data);
 };
+
 
 exports.getRoomsByID = function(req, res){
     accessLog.info('getRoomsById:  params: ' + JSON.stringify(req.params));
