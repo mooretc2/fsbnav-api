@@ -103,7 +103,7 @@ async function router(originR, destinationR, preference){
             try{
                 for(i = 0; i < path.length; i++) {
                     cellInfo = await cells.getCellByNodeID(path[i]);
-                    retPath.push(cellInfo);
+                    retPath.push(cellInfo[0]);
                 }
             }catch(error){};
 
@@ -129,6 +129,7 @@ function isIntersecting(numOfNodes, originVisited, destVisited) {
 
 
 exports.getRoute = async function(req, res){
+	var path;
 	accessLog.info('getRoute: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
 
     if(!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0)){
@@ -136,8 +137,8 @@ exports.getRoute = async function(req, res){
         res.status(400).send("Request must not be empty");
     } else if(req.body.method && req.body.method === "room to room") {
         try{
-            path = router(req.body.origin, req.body.destination, req.body.stairs);
-        } catch (err) {
+            path = await router(req.body.origin, req.body.destination, req.body.stairs);
+	} catch (err) {
             errorLog.error("getRoute: " + err);
             res.status(500).send("Something went wrong");
         }
@@ -161,7 +162,7 @@ exports.getRoute = async function(req, res){
 			{floor:2,x:25,y:9}
 		];
 	}
-	res.json(waypoints);
+	res.json(path);
 };
 
 exports.getRooms = async function(req, res){
