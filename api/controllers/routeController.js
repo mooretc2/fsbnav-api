@@ -20,7 +20,10 @@ async function router(originR, destinationR, preference){
 
         //number of nodes (must be pulled from database... and stored in web services globally)
         var numOfNodes = await nodes.getNumNodes();
-    }catch(error){};
+    }catch(error){
+        errorLog.error("getNodeIDByRoomID: " + error);
+        res.status(500).send("Error getting data from the database");
+    };
 
     //boolean arrays to store visited node primary keys
     var originVisited = new Array(numOfNodes).fill(false);
@@ -53,7 +56,10 @@ async function router(originR, destinationR, preference){
 
         try{
             adjacentList = await edges.getAdjacentNode(current, preference);
-        }catch(error){};
+        }catch(error){
+            errorLog.error("getAdjacentNode: " + error);
+            res.status(500).send("Error getting data from the database");
+        };
         
         
         for(i = 0; i < adjacentList.length; i++)   {
@@ -68,7 +74,10 @@ async function router(originR, destinationR, preference){
         current = destQueue.shift();
         try{
             adjacentList = await edges.getAdjacentNode(current, preference);
-        }catch(error){};
+        }catch(error){
+            errorLog.error("getAdjacentNode: " + error);
+            res.status(500).send("Error getting data from the database");
+        };
 
         for(i = 0; i < adjacentList.length; i++)   {
             if(!destVisited[adjacentList[i]]) {
@@ -105,7 +114,10 @@ async function router(originR, destinationR, preference){
                     cellInfo = await cells.getCellByNodeID(path[i]);
                     retPath.push(cellInfo[0]);
                 }
-            }catch(error){};
+            }catch(error){
+                errorLog.error("getCellIDByNodeID: " + error);
+                res.status(500).send("Error getting data from the database");
+            };
 
             return new Promise(function(resolve){
                 resolve(retPath);
@@ -187,5 +199,10 @@ exports.getRoomsByID = async function(req, res){
         res.status(500).send("error getting data from the database");
         errorLog.error("getRoomsById : " + err);
     }
+	res.json(data);
+};
+
+exports.testFunction = async function(req, res){
+	data = await router(1038, 2000, 0);
 	res.json(data);
 };
