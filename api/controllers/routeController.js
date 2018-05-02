@@ -180,6 +180,7 @@ exports.getRoomsByID = function(req, res){
 };
 
 exports.testFunction = async function(req, res){
-	data = await nodes.getNumNodes();
+	edges.getAdjacentNode(65, 0, function(err, data){
 	res.json(data);
+	});
 };
