@@ -6254,17 +6254,18 @@ DROP TABLE IF EXISTS `mydb`.`beacon` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`beacon` (
   `beaconID` INT NOT NULL,
-  `cellID` INT NOT NULL,
-  PRIMARY KEY (`beaconID`),
-  INDEX `cellID_idx` (`cellID` ASC),
-  CONSTRAINT `beaconcellID`
-    FOREIGN KEY (`cellID`)
-    REFERENCES `mydb`.`cell` (`cellID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  `beaconMinor` TINYTEXT NOT NULL,
+  `roomNumber` INT NOT NULL,
+  PRIMARY KEY (`beaconID`))
 ENGINE = InnoDB;
 
 USE `mydb` ;
+
+INSERT INTO beacon (beaconID, beaconMinor, roomNumber) VALUES
+
+			(1, '1035', 1035),
+			(2, '8000', 1036),
+			(3, '8001', 1038);
 
 -- -----------------------------------------------------
 -- Placeholder table for view `mydb`.`view1`
