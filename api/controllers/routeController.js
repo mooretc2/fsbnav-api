@@ -84,13 +84,6 @@ async function router(originR, destinationR, preference){
             //if intersecting vertex is found, there is a path
         if (intersectNode != -1) {
             var path = [];
-		
-            console.log(JSON.stringify(destParent));
-            console.log(JSON.stringify(originParent));
-            console.log(JSON.stringify(intersectNode));
-	    console.log(JSON.stringify(numOfNodes));
-	    console.log(JSON.stringify(origin));
-	    console.log(JSON.stringify(destination));
 	    	path.push(intersectNode);
             i = intersectNode;
             while(i != origin) {
@@ -193,10 +186,5 @@ exports.getRoomsByID = async function(req, res){
         res.status(500).send("error getting data from the database");
         errorLog.error("getRoomsById : " + err);
     }
-	res.json(data);
-};
-
-exports.testFunction = async function(req, res){
-	data = await router(1038, 2000, 0);
 	res.json(data);
 };
