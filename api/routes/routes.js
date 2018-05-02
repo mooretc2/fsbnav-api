@@ -7,5 +7,7 @@ module.exports = function(app) {
   app.get('/rooms', routeController.getRooms);
   
   app.get('/rooms/:roomID', routeController.getRoomsByID);
+
+  app.get('/test', routeController.testFunction);
 };
 

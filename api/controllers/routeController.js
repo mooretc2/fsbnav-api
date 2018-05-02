@@ -163,4 +163,9 @@ exports.getRoomsByID = function(req, res){
         }
 		res.json(data);
 	});
-}
+};
+
+exports.testFunction = async function(req, res){
+	data = await nodes.getNumNodes();
+	res.json(data);
+};

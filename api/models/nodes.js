@@ -7,9 +7,9 @@ exports.getAllNodeIDs = function (done) {
     });
 }
 
-exports.getNumNodes = function (done) {
+exports.getNumNodes = function () {
     db.get().query('SELECT COUNT(nodeID) FROM node', function (err, rows) {
-        if (err) return done(err);
-        done(null, rows);
+        if (err) return err;
+        return rows[0]["COUNT(nodeID)"];
     });
 }
