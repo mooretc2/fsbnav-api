@@ -1,6 +1,6 @@
 var db = require('../../db.js');
 
-exports.getAllNodeIDs = function (done) {
+exports.getAllNodeIDs = function () {
     return new Promise(function (resolve, reject) {
         db.get().query('SELECT nodeID FROM node', function (err, rows) {
             if (err) reject(err);
