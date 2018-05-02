@@ -5,14 +5,22 @@ var logger = require('../../log/logger'),
     edges = require('../models/edges'),
     rooms = require('../models/rooms'),
     cells = require('../models/cells');
+
 /*
+
 //current algorithm does not make use of searching through database nodes, getting edges, or checking for stair/elevator preferences
 //origin and destination must be ints (primary key of node)
 //preference must be a tinyint (0 or 1)
-function router(origin, destination, preference){
-	
-    //number of nodes (must be pulled from database... and stored in web services globally)
-    var numOfNodes = 70;
+async function router(originR, destinationR, preference){
+
+    //Change rooms to nodes FUNCTION
+    try{
+        origin = await rooms.getNodeIDByRoomID(originR);
+        destination = await rooms.getNodeIDByRoomID(destinationR);
+
+        //number of nodes (must be pulled from database... and stored in web services globally)
+        var numOfNodes = await nodes.getNumNodes();
+    }catch(error){};
 
     //boolean arrays to store visited node primary keys
     var originVisited = new Array(numOfNodes).fill(false);
@@ -41,8 +49,12 @@ function router(origin, destination, preference){
 
         //BFS for forward
         current = originQueue.shift();
-        //need to get list of adjacent nodes from db
-        //need to handle stair/elevator preference
+
+        try{
+            //Get adjacents
+        }catch(error){};
+        
+        
         for()   {
             if(!originVisited[i])   {
                 originParent[i] = current;
@@ -94,7 +106,9 @@ function isIntersecting(numOfNodes, originVisited, destVisited) {
     }
     return -1;
 }
+
 */
+
 exports.getRoute = function(req, res){
 	accessLog.info('getRoute: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
 

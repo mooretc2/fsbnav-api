@@ -14,15 +14,10 @@ exports.getNumEdges = function (done) {
     });
 }
 
-exports.getAdjacentNode = function(nodeID, edgeID, stairs, done) {
-    db.get().query('SELECT node1ID, node2ID, transition FROM edge WHERE edgeID = ?', edgeID, function (err, rows) {
-        if (err) return done(err);
-        if (rows[0].transition != 'NULL' && rows[0].transition != stairs){
-            done(null, null);
-        } else if (rows[0].node1ID == nodeID){
-            done(null, rows[0].node2ID);
-        } else if (rows[0].node2ID == nodeID){
-            done(null, rows[0].node1ID);
-        }
+exports.getAdjacentNode = function(nodeID, stairs, done) {
+    db.get().query('(SELECT node1ID FROM edge WHERE (node2ID = ? AND (transition = ? OR transition IS NULL))) UNION' +
+        ' (SELECT node2ID FROM edge WHERE (node1ID = ? AND (transition = ? OR transition IS NULL)))', nodeID, stairs, function (err, rows) {
+            if (err) return done(err);
+            else done(null, rows);
     });
 }
