@@ -6,7 +6,7 @@ var logger = require('../../log/logger'),
     rooms = require('../models/rooms'),
     cells = require('../models/cells');
 
-/*
+
 
 //current algorithm does not make use of searching through database nodes, getting edges, or checking for stair/elevator preferences
 //origin and destination must be ints (primary key of node)
@@ -49,13 +49,14 @@ async function router(originR, destinationR, preference){
 
         //BFS for forward
         current = originQueue.shift();
+        var adjacentList;
 
         try{
-            //Get adjacents
+            adjacentList = await edges.getAdjacentNode(current, preference);
         }catch(error){};
         
         
-        for()   {
+        for(i = 0; i < adjacentList.length; i++)   {
             if(!originVisited[i])   {
                 originParent[i] = current;
                 originVisited[i] = true;
@@ -65,9 +66,11 @@ async function router(originR, destinationR, preference){
 
         //BFS for backward
         current = destQueue.shift();
-        //need list of adj nodes from db
-        //need to handle stair/elevator preference... possibly in the getEdge call
-        for()   {
+        try{
+            adjacentList = await edges.getAdjacentNode(current, preference);
+        }catch(error){};
+
+        for(i = 0; i < adjacentList.length; i++)   {
             if(!destVisited[i]) {
                 destParent[i] = current;
                 destVisited[i] = true;
@@ -92,10 +95,22 @@ async function router(originR, destinationR, preference){
                 path.push(destinationParent[i]);
                 i = destinationParent[i];
             }
-            //return path. still needs to be done
+
+            var retPath = [];
+            cellInfo;
+
+            //CONVERSION node to cells
+            try{
+                for(i = 0; i < path.length; i++) {
+                    cellInfo = await cells.getCellByNodeID(path[i]);
+                    retPath.push(cellInfo);
+                }
+            }catch(error){};
+
+            return done(null, retPath);
         }
     }
-    //Failure. not sure what to put here if failure occurs
+    done(err);
 }
 
 //check for intersection between BFS. used by router
@@ -107,7 +122,7 @@ function isIntersecting(numOfNodes, originVisited, destVisited) {
     return -1;
 }
 
-*/
+
 
 exports.getRoute = function(req, res){
 	accessLog.info('getRoute: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
