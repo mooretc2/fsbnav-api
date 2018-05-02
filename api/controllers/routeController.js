@@ -107,10 +107,14 @@ async function router(originR, destinationR, preference){
                 }
             }catch(error){};
 
-            return done(null, retPath);
+            return new Promise(function(resolve){
+                resolve(retPath);
+            });
         }
     }
-    done(err);
+    return new Promise(function(reject){
+        reject(err);
+    });
 }
 
 //check for intersection between BFS. used by router
@@ -124,31 +128,19 @@ function isIntersecting(numOfNodes, originVisited, destVisited) {
 
 
 
-exports.getRoute = function(req, res){
+exports.getRoute = async function(req, res){
 	accessLog.info('getRoute: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
 
     if(!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0)){
         errorLog.warn("getRoute Bad Request: " + JSON.stringify(req.body));
         res.status(400).send("Request must not be empty");
     } else if(req.body.method && req.body.method === "room to room") {
-		//path = router(begin, end, stairs);
-		var waypoints = [
-			{floor:1,x:5,y:26},
-			{floor:1,x:7,y:26},
-			{floor:1,x:7,y:13},
-			{floor:1,x:21,y:13},
-			{floor:1,x:21,y:15},
-			{floor:1,x:30,y:15},
-			{floor:1,x:30,y:13},
-			{floor:1,x:33,y:13},
-			{floor:1,x:33,y:14},
-			{floor:2,x:32,y:12},
-			{floor:2,x:33,y:12},
-			{floor:2,x:33,y:11},
-			{floor:2,x:30,y:11},
-			{floor:2,x:30,y:8},
-			{floor:2,x:25,y:8}
-		];
+        try{
+            path = router(req.body.origin, req.body.destination, req.body.stairs);
+        } catch (err) {
+            errorLog.error("getRoute: " + err);
+            res.status(500).send("Something went wrong");
+        }
 	} else if(req.body.sensors.length < 3){
 		errorLog.warn("getRoute Bad request: " + JSON.stringify(req.body));
 		res.status(400).send("Request must include data from at least 3 sensors");
@@ -198,6 +190,6 @@ exports.getRoomsByID = async function(req, res){
 };
 
 exports.testFunction = async function(req, res){
-	data = await edges.getAdjacentNode(1, 1);
+	data = await router(5, 35, 1);
 	res.json(data);
 };
