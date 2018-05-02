@@ -195,7 +195,6 @@ exports.getRoomsByID = function(req, res){
 };
 
 exports.testFunction = async function(req, res){
-	edges.getAdjacentNode(1, 1, function(err, data){
+	data = await edges.getAdjacentNode(1, 1);
 	res.json(data);
-	});
 };
