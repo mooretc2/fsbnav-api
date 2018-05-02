@@ -57,10 +57,10 @@ async function router(originR, destinationR, preference){
         
         
         for(i = 0; i < adjacentList.length; i++)   {
-            if(!originVisited[i])   {
-                originParent[i] = current;
-                originVisited[i] = true;
-                originQueue.push(i);
+            if(!originVisited[adjacentList[i]])   {
+                originParent[adjacentList[i]] = current;
+                originVisited[adjacentList[i]] = true;
+                originQueue.push(adjacentList[i]);
             }
         }
 
@@ -71,10 +71,10 @@ async function router(originR, destinationR, preference){
         }catch(error){};
 
         for(i = 0; i < adjacentList.length; i++)   {
-            if(!destVisited[i]) {
-                destParent[i] = current;
-                destVisited[i] = true;
-                destQueue.push(i);
+            if(!destVisited[adjacentList[i]]) {
+                destParent[adjacentList[i]] = current;
+                destVisited[adjacentList[i]] = true;
+                destQueue.push(adjacentList[i]);
         }
         }
 
@@ -84,7 +84,14 @@ async function router(originR, destinationR, preference){
             //if intersecting vertex is found, there is a path
         if (intersectNode != -1) {
             var path = [];
-            path.push(intersectNode);
+		
+            console.log(JSON.stringify(destParent));
+            console.log(JSON.stringify(originParent));
+            console.log(JSON.stringify(intersectNode));
+	    console.log(JSON.stringify(numOfNodes));
+	    console.log(JSON.stringify(origin));
+	    console.log(JSON.stringify(destination));
+	    	path.push(intersectNode);
             i = intersectNode;
             while(i != origin) {
                 path.unshift(originParent[i]);
@@ -92,12 +99,12 @@ async function router(originR, destinationR, preference){
             }
             i = intersectNode;
             while(i != destination) {
-                path.push(destinationParent[i]);
-                i = destinationParent[i];
+                path.push(destParent[i]);
+                i = destParent[i];
             }
 
             var retPath = [];
-            cellInfo;
+            var cellInfo;
 
             //CONVERSION node to cells
             try{
@@ -190,6 +197,6 @@ exports.getRoomsByID = async function(req, res){
 };
 
 exports.testFunction = async function(req, res){
-	data = await router(5, 35, 1);
+	data = await router(1038, 2000, 0);
 	res.json(data);
 };

@@ -20,9 +20,9 @@ exports.getAllStartingWith = function (roomID) {
 
 exports.getNodeIDByRoomID = function (roomID) {
     return new Promise(function (resolve, reject) {
-        db.get().query("SELECT nodeID FROM room WHERE roomID = ?", roomID, function (err, rows) {
+        db.get().query("SELECT nodeID FROM room WHERE roomNumber = ?", roomID, function (err, rows) {
             if (err) reject(err);
-            else resolve(rows);
+            else resolve(rows[0].nodeID);
         });
     });
 }
