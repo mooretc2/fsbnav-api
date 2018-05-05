@@ -4,9 +4,8 @@ var logger = require('../../log/logger'),
     nodes = require('../models/nodes'),
     edges = require('../models/edges'),
     rooms = require('../models/rooms'),
-    cells = require('../models/cells');
-
-
+    cells = require('../models/cells'),
+    beacons = require('../models/beacons');
 
 //current algorithm does not make use of searching through database nodes, getting edges, or checking for stair/elevator preferences
 //origin and destination must be ints (primary key of node)
@@ -147,36 +146,34 @@ exports.getRoute = async function (req, res) {
     if (!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0)) {
         errorLog.warn("getRoute Bad Request: " + JSON.stringify(req.body));
         res.status(400).send("Request must not be empty");
-<<<<<<< HEAD
-    } else if(req.body.method && req.body.method === "room to room") {
-        try{
-=======
     } else if (req.body.method && req.body.method === "room to room") {
         try {
             path = await router(req.body.origin, req.body.destination, req.body.stairs);
         } catch (err) {
-            errorLog.error("getRoute: " + err);
+            errorLog.error("getRoute[153]: " + err);
             res.status(500).send("Something went wrong");
         }
-    } else if (!req.body.sensors) {
-        errorLog.warn("getRoute Bad request: " + JSON.stringify(req.body));
-        res.status(400).send("Request must include data from a sensor");
-    } else {
+    } else if(req.body.method && req.body.method === "bluetooth") {
         if (req.body.stairs === "true"){
             try {
-                path = await router(req.body.origin, req.body.destination, 1);
+		origin = await beacons.getRoomByBeaconMinor(req.body.sensors[0].minor);
+                path = await router(origin, req.body.destination, 1);
             } catch (err) {
-                errorLog.error("getRoute: " + err);
-                res.status(500).send("Something went wrong");
+                errorLog.error("getRoute[162]: " + err);
+                res.status(500).send("Something went wrong: "+err);
             }
         } else if(req.body.stairs === "false") {
             try {
-                path = await router(req.body.origin, req.body.destination, 0);
+		origin = await beacons.getRoomByBeaconMinor(req.body.sensors[0].minor);
+		path = await router(origin, req.body.destination, 0);
             } catch (err) {
-                errorLog.error("getRoute: " + err);
-                res.status(500).send("Something went wrong");
+                errorLog.error("getRoute[170]: " + err);
+                res.status(500).send("Something went wrong: "+err);
             }
         }
+    } else {
+	errorLog.error("getRoute: Bad Request: " + JSON.stringify(req.body));
+	res.status(400).send("Bad request: " + JSON.stringify(req.body));
     }
     res.json(path);
 };
