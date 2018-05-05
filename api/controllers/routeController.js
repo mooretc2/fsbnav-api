@@ -156,7 +156,7 @@ exports.getRoute = async function (req, res) {
     } else if(req.body.method && req.body.method === "bluetooth") {
         if (req.body.stairs === "true"){
             try {
-		origin = await beacons.getRoomByBeaconMinor(req.body.sensors[0].minor);
+		origin = await beacons.getRoomByBeaconMinor(parseInt(req.body.sensors[0].minor));
                 path = await router(origin, req.body.destination, 1);
             } catch (err) {
                 errorLog.error("getRoute[162]: " + err);
@@ -164,7 +164,7 @@ exports.getRoute = async function (req, res) {
             }
         } else if(req.body.stairs === "false") {
             try {
-		origin = await beacons.getRoomByBeaconMinor(req.body.sensors[0].minor);
+		origin = await beacons.getRoomByBeaconMinor(parseInt(req.body.sensors[0].minor));
 		path = await router(origin, req.body.destination, 0);
             } catch (err) {
                 errorLog.error("getRoute[170]: " + err);
