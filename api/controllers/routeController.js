@@ -148,7 +148,7 @@ exports.getRoute = async function(req, res){
         res.status(400).send("Request must not be empty");
     } else if(req.body.method && req.body.method === "room to room") {
         try{
-            path = router(req.body.origin, req.body.destination, req.body.stairs);
+            path = await router(req.body.origin, req.body.destination, req.body.stairs);
         } catch (err) {
             errorLog.error("getRoute: " + err);
             res.status(500).send("Something went wrong");
@@ -162,7 +162,7 @@ exports.getRoute = async function(req, res){
 				//path = router(begin, end, stairs);
 			}
 		}
-		var waypoints = [
+		var path = [
 			{floor:1,x:5,y:26},
 			{floor:1,x:7,y:26},
 			{floor:1,x:7,y:12},
@@ -173,7 +173,7 @@ exports.getRoute = async function(req, res){
 			{floor:2,x:25,y:9}
 		];
 	}
-	res.json(waypoints);
+	res.json(path);
 };
 
 exports.getRooms = async function(req, res){

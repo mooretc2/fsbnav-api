@@ -8,6 +8,6 @@ module.exports = function(app) {
   
   app.get('/rooms/:roomID', routeController.getRoomsByID);
 
-  app.get('/test', routeController.testFunction);
+  //app.get('/test', routeController.testFunction);
 };
 
