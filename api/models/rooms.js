@@ -22,7 +22,11 @@ exports.getNodeIDByRoomID = function (roomID) {
     return new Promise(function (resolve, reject) {
         db.get().query("SELECT nodeID FROM room WHERE roomNumber = ?", roomID, function (err, rows) {
             if (err) reject(err);
-            else resolve(rows[0].nodeID);
+            else if (rows[0]){
+                resolve(rows[0].nodeID);
+            } else {
+                reject("Room "+roomID+" does not exist");
+            }
         });
     });
 }

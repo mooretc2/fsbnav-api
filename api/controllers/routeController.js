@@ -11,16 +11,16 @@ var logger = require('../../log/logger'),
 //current algorithm does not make use of searching through database nodes, getting edges, or checking for stair/elevator preferences
 //origin and destination must be ints (primary key of node)
 //preference must be a tinyint (0 or 1)
-async function router(originR, destinationR, preference){
+async function router(originR, destinationR, preference) {
 
     //Change rooms to nodes FUNCTION
-    try{
+    try {
         origin = await rooms.getNodeIDByRoomID(originR);
         destination = await rooms.getNodeIDByRoomID(destinationR);
 
         //number of nodes (must be pulled from database... and stored in web services globally)
         var numOfNodes = await nodes.getNumNodes();
-    }catch(error){
+    } catch (error) {
         errorLog.error("getNodeIDByRoomID: " + error);
         res.status(500).send("Error getting data from the database");
     };
@@ -43,7 +43,7 @@ async function router(originR, destinationR, preference){
     originQueue.push(origin);
     originVisited[origin] = true;
     originParent[origin] = -1;
-    
+
     destQueue.push(destination);
     destVisited[destination] = true;
     destParent[destination] = -1;
@@ -54,16 +54,16 @@ async function router(originR, destinationR, preference){
         current = originQueue.shift();
         var adjacentList;
 
-        try{
+        try {
             adjacentList = await edges.getAdjacentNode(current, preference);
-        }catch(error){
+        } catch (error) {
             errorLog.error("getAdjacentNode: " + error);
             res.status(500).send("Error getting data from the database");
         };
-        
-        
-        for(i = 0; i < adjacentList.length; i++)   {
-            if(!originVisited[adjacentList[i]])   {
+
+
+        for (i = 0; i < adjacentList.length; i++) {
+            if (!originVisited[adjacentList[i]]) {
                 originParent[adjacentList[i]] = current;
                 originVisited[adjacentList[i]] = true;
                 originQueue.push(adjacentList[i]);
@@ -72,35 +72,35 @@ async function router(originR, destinationR, preference){
 
         //BFS for backward
         current = destQueue.shift();
-        try{
+        try {
             adjacentList = await edges.getAdjacentNode(current, preference);
-        }catch(error){
+        } catch (error) {
             errorLog.error("getAdjacentNode: " + error);
             res.status(500).send("Error getting data from the database");
         };
 
-        for(i = 0; i < adjacentList.length; i++)   {
-            if(!destVisited[adjacentList[i]]) {
+        for (i = 0; i < adjacentList.length; i++) {
+            if (!destVisited[adjacentList[i]]) {
                 destParent[adjacentList[i]] = current;
                 destVisited[adjacentList[i]] = true;
                 destQueue.push(adjacentList[i]);
-        }
+            }
         }
 
-            //check for intersection
+        //check for intersection
         intersectNode = isIntersecting(numOfNodes, originVisited, destVisited);
 
-            //if intersecting vertex is found, there is a path
+        //if intersecting vertex is found, there is a path
         if (intersectNode != -1) {
             var path = [];
-	    	path.push(intersectNode);
+            path.push(intersectNode);
             i = intersectNode;
-            while(i != origin) {
+            while (i != origin) {
                 path.unshift(originParent[i]);
                 i = originParent[i];
             }
             i = intersectNode;
-            while(i != destination) {
+            while (i != destination) {
                 path.push(destParent[i]);
                 i = destParent[i];
             }
@@ -109,22 +109,22 @@ async function router(originR, destinationR, preference){
             var cellInfo;
 
             //CONVERSION node to cells
-            try{
-                for(i = 0; i < path.length; i++) {
+            try {
+                for (i = 0; i < path.length; i++) {
                     cellInfo = await cells.getCellByNodeID(path[i]);
-                    retPath.push(cellInfo);
+                    retPath.push(cellInfo[0]);
                 }
-            }catch(error){
+            } catch (error) {
                 errorLog.error("getCellIDByNodeID: " + error);
                 res.status(500).send("Error getting data from the database");
             };
 
-            return new Promise(function(resolve){
+            return new Promise(function (resolve) {
                 resolve(retPath);
             });
         }
     }
-    return new Promise(function(reject){
+    return new Promise(function (reject) {
         reject(err);
     });
 }
@@ -140,68 +140,73 @@ function isIntersecting(numOfNodes, originVisited, destVisited) {
 
 
 
-exports.getRoute = async function(req, res){
-	accessLog.info('getRoute: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
+exports.getRoute = async function (req, res) {
+    var path;
+    accessLog.info('getRoute: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
 
-    if(!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0)){
+    if (!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0)) {
         errorLog.warn("getRoute Bad Request: " + JSON.stringify(req.body));
         res.status(400).send("Request must not be empty");
+<<<<<<< HEAD
     } else if(req.body.method && req.body.method === "room to room") {
         try{
+=======
+    } else if (req.body.method && req.body.method === "room to room") {
+        try {
             path = await router(req.body.origin, req.body.destination, req.body.stairs);
         } catch (err) {
             errorLog.error("getRoute: " + err);
             res.status(500).send("Something went wrong");
         }
-	} else if(req.body.sensors.length < 3){
-		errorLog.warn("getRoute Bad request: " + JSON.stringify(req.body));
-		res.status(400).send("Request must include data from at least 3 sensors");
-	} else {
-		if(req.body.stairs){ 
-			if(req.body.stairs != "true" || req.body.stairs != "false"){
-				//path = router(begin, end, stairs);
-			}
-		}
-		var path = [
-			{floor:1,x:5,y:26},
-			{floor:1,x:7,y:26},
-			{floor:1,x:7,y:12},
-			{floor:2,x:6,y:10},
-			{floor:2,x:6,y:11},
-			{floor:2,x:21,y:11},
-			{floor:2,x:21,y:9},
-			{floor:2,x:25,y:9}
-		];
-	}
-	res.json(path);
+    } else if (!req.body.sensors) {
+        errorLog.warn("getRoute Bad request: " + JSON.stringify(req.body));
+        res.status(400).send("Request must include data from a sensor");
+    } else {
+        if (req.body.stairs === "true"){
+            try {
+                path = await router(req.body.origin, req.body.destination, 1);
+            } catch (err) {
+                errorLog.error("getRoute: " + err);
+                res.status(500).send("Something went wrong");
+            }
+        } else if(req.body.stairs === "false") {
+            try {
+                path = await router(req.body.origin, req.body.destination, 0);
+            } catch (err) {
+                errorLog.error("getRoute: " + err);
+                res.status(500).send("Something went wrong");
+            }
+        }
+    }
+    res.json(path);
 };
 
-exports.getRooms = async function(req, res){
-	accessLog.info('getRooms:  params: ' + JSON.stringify(req.params));
+exports.getRooms = async function (req, res) {
+    accessLog.info('getRooms:  params: ' + JSON.stringify(req.params));
     var data;
-    try{
+    try {
         data = await rooms.getAll();
     } catch (err) {
         res.status(500).send("error getting data from the database");
         errorLog.error("getRooms: " + err);
     }
-	res.json(data);
+    res.json(data);
 };
 
 
-exports.getRoomsByID = async function(req, res){
+exports.getRoomsByID = async function (req, res) {
     accessLog.info('getRoomsById:  params: ' + JSON.stringify(req.params));
     var data;
-    try{
+    try {
         data = await rooms.getAllStartingWith(parseInt(req.params.roomID));
-    } catch(err){
+    } catch (err) {
         res.status(500).send("error getting data from the database");
         errorLog.error("getRoomsById : " + err);
     }
-	res.json(data);
+    res.json(data);
 };
 
-exports.testFunction = async function(req, res){
-	data = await router(1038, 2000, 0);
-	res.json(data);
+exports.testFunction = async function (req, res) {
+    data = await router(1038, 2000, 0);
+    res.json(data);
 };
