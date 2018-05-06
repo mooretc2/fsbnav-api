@@ -2,7 +2,7 @@ var db = require('../../db.js');
 
 exports.getAll = function () {
     return new Promise(function (resolve, reject) {
-        db.get().query('SELECT roomName, isPopular FROM room', function (err, rows) {
+        db.get().query('SELECT roomName, roomNumber, isPopular FROM room', function (err, rows) {
             if (err) reject(err);
             else resolve(rows);
         });
@@ -11,7 +11,7 @@ exports.getAll = function () {
 
 exports.getAllStartingWith = function (roomID) {
     return new Promise(function (resolve, reject) {
-        db.get().query("SELECT roomName FROM room WHERE roomNumber LIKE ?", roomID + '%', function (err, rows) {
+        db.get().query("SELECT roomName, roomNumber, isPopular FROM room WHERE roomNumber LIKE ?", roomID + '%', function (err, rows) {
             if (err) reject(err);
             else resolve(rows);
         });
