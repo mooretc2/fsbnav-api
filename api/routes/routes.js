@@ -1,4 +1,7 @@
-
+/**
+ * Routes endpoints to their respective controllers
+ * @param {Express} app Express app object.
+ */
 module.exports = function(app) {
   var routeController = require('../controllers/routeController');
 

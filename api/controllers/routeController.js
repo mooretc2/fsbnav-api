@@ -138,13 +138,28 @@ function isIntersecting(numOfNodes, originVisited, destVisited) {
 }
 
 
-
+/**
+ * Routes the user from their origin to their destination
+ * @param {Object}   req HTTP request coming in to the server.
+ * @param {Object}   req.body Body of the HTTP request coming in to the server.
+ * @param {string}   req.body.method Method of navigation, either "bluetooth" or "room to room".
+ * @param {Object[]} [req.body.sensors] Array of sensors to be used for bluetooth routing. Required when method="bluetooth".
+ * @param {number}   [req.body.sensors[].minor] Minor ID of the nearest bluetooth sensor.
+ * @param {number}   [req.body.origin] Room number of origin room. Required when method="room to room".
+ * @param {number}   req.body.destination Room number of destination room.
+ * @param {string}   req.body.stairs Preference of stairs vs. elevator. "true" if stairs is preference, "false" if elevator is preference.
+ * @param {Object}   res HTTP response to be sent back.
+ * @param {Object[]} res.body Body of the HTTP response. Contains a list of coordinates that represents the route from the origin to the destination.
+ * @param {number}   res.body[].floorID Floor number the coordinate maps to.
+ * @param {number}   res.body[].x X coordinate.
+ * @param {number}   res.body[].y Y coordinate.
+ */
 exports.getRoute = async function (req, res) {
     var path;
     accessLog.info('getRoute: ' + JSON.stringify(req.body) + ' params: ' + JSON.stringify(req.params));
 
     if (!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0)) {
-        errorLog.warn("getRoute Bad Request: " + JSON.stringify(req.body));
+        errorLog.warn("getRoute[147]: Bad Request: " + JSON.stringify(req.body));
         res.status(400).send("Request must not be empty");
     } else if (req.body.method && req.body.method === "room to room") {
         try {
@@ -153,31 +168,40 @@ exports.getRoute = async function (req, res) {
             errorLog.error("getRoute[153]: " + err);
             res.status(500).send("Something went wrong");
         }
-    } else if(req.body.method && req.body.method === "bluetooth") {
-        if (req.body.stairs === "true"){
+    } else if (req.body.method && req.body.method === "bluetooth") {
+        if (req.body.stairs === "true") {
             try {
-		origin = await beacons.getRoomByBeaconMinor(parseInt(req.body.sensors[0].minor));
+                origin = await beacons.getRoomByBeaconMinor(parseInt(req.body.sensors[0].minor));
                 path = await router(origin, req.body.destination, 1);
             } catch (err) {
                 errorLog.error("getRoute[162]: " + err);
-                res.status(500).send("Something went wrong: "+err);
+                res.status(500).send("Something went wrong: " + err);
             }
-        } else if(req.body.stairs === "false") {
+        } else if (req.body.stairs === "false") {
             try {
-		origin = await beacons.getRoomByBeaconMinor(parseInt(req.body.sensors[0].minor));
-		path = await router(origin, req.body.destination, 0);
+                origin = await beacons.getRoomByBeaconMinor(parseInt(req.body.sensors[0].minor));
+                path = await router(origin, req.body.destination, 0);
             } catch (err) {
                 errorLog.error("getRoute[170]: " + err);
-                res.status(500).send("Something went wrong: "+err);
+                res.status(500).send("Something went wrong: " + err);
             }
         }
     } else {
-	errorLog.error("getRoute: Bad Request: " + JSON.stringify(req.body));
-	res.status(400).send("Bad request: " + JSON.stringify(req.body));
+        errorLog.error("getRoute[175]: Bad Request: " + JSON.stringify(req.body));
+        res.status(400).send("Bad request: " + JSON.stringify(req.body));
     }
     res.json(path);
 };
 
+/**
+ * Returns a list of all the rooms in the database.
+ * @param {Object}   req HTTP request coming in to the server.
+ * @param {Object}   res HTTP response to be sent back.
+ * @param {Object[]} res.body Body of the HTTP response. Contains a list of rooms.
+ * @param {string}   res.body[].roomName Name of the room, eg. "Taylor Auditorium".
+ * @param {number}   res.body[].roomNumber Number of the room, eg. 1000.
+ * @param {number}   res.body[].isPopular 1 if the room is considered "popular", 0 if it is not.
+ */
 exports.getRooms = async function (req, res) {
     accessLog.info('getRooms:  params: ' + JSON.stringify(req.params));
     var data;
@@ -190,7 +214,17 @@ exports.getRooms = async function (req, res) {
     res.json(data);
 };
 
-
+/**
+ * Returns a list of all the rooms in the database with a room number that contains roomID.
+ * @param {Object}   req HTTP request coming in to the server.
+ * @param {Object}   req.params Parameters in the URL of the HTTP request.
+ * @param {number}   req.params.roomID ID to compare the room numbers to.
+ * @param {Object}   res HTTP response to be sent back.
+ * @param {Object[]} res.body Body of the HTTP response. Contains a list of rooms.
+ * @param {string}   res.body[].roomName Name of the room, eg. "Taylor Auditorium".
+ * @param {number}   res.body[].roomNumber Number of the room, eg. 1000.
+ * @param {number}   res.body[].isPopular 1 if the room is considered "popular", 0 if it is not.
+ */
 exports.getRoomsByID = async function (req, res) {
     accessLog.info('getRoomsById:  params: ' + JSON.stringify(req.params));
     var data;
