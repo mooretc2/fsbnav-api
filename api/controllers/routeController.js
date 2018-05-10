@@ -146,7 +146,7 @@ exports.getRoute = async function (req, res) {
     if (!req.body || (req.body.constructor === Object && Object.keys(req.body).length === 0)) {
         errorLog.warn("getRoute Bad Request: " + JSON.stringify(req.body));
         res.status(400).send("Request must not be empty");
-    } else if (req.body.method && req.body.method === "room to room") {
+    } else if (req.body.method && req.body.method == "room to room") {
         try {
             path = await router(req.body.origin, req.body.destination, req.body.stairs);
         } catch (err) {
@@ -157,7 +157,7 @@ exports.getRoute = async function (req, res) {
         if (req.body.stairs === "true"){
             try {
 		origin = await beacons.getRoomByBeaconMinor(parseInt(req.body.sensors[0].minor));
-                path = await router(origin, req.body.destination, 1);
+                path = await router(origin, parseInt(req.body.destination), 1);
             } catch (err) {
                 errorLog.error("getRoute[162]: " + err);
                 res.status(500).send("Something went wrong: "+err);
